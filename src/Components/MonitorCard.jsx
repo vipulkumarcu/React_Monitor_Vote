@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useContext } from "react";
-import { Badge, Button, Card, ListGroup } from "react-bootstrap";
+import { Badge, Button, Card, Col, ListGroup, Row } from "react-bootstrap";
 import VoteContext from "../Context/vote-context";
 
-function MonitorCard ( props )
+function MonitorCard ( { monitor } )
 {
   const context = useContext ( VoteContext );
 
@@ -12,26 +12,43 @@ function MonitorCard ( props )
     context.removeStudentVote ( voteID );
   }
 
-  const votes = context.studentList.filter ( ( student ) => student.Monitor_Name === props.monitorName );
+  function monitorDeletionHandler ()
+  {
+    context.removeMonitor ( monitor.ID );
+  }
+
+  const votes = context.studentList.filter ( student => student.Monitor_Name === monitor.Monitor_Name );
 
   return (
-    <Card style = { { width: '18rem' } }>
+    <Card className = "shadow" style = { { width: '18rem' } } >
 
       <Card.Body>
-        <Card.Title> { props.monitorName } </Card.Title>
-        <h5>
-          Votes:
-          <Badge pill bg = "warning" text = "dark" className = "ms-2"> { votes.length } </Badge>
-        </h5>
+
+        <Row>
+
+          <Col>
+            <Card.Title> { monitor.Monitor_Name } </Card.Title>
+            <h6>
+              Votes:
+              <Badge pill bg = "info" text = "dark" className = "shadow ms-2" > { votes.length } </Badge>
+            </h6>
+          </Col>
+
+          <Col>
+            <Button variant = "outline-danger" onClick = { monitorDeletionHandler } className = "shadow" > Remove </Button>
+          </Col>
+
+        </Row>
+
       </Card.Body>
 
-      <ListGroup className = "list-group-flush">
+      <ListGroup className = "list-group-flush" >
         {
-          votes.map ( ( student ) =>
-            (
-              <ListGroup.Item key = { student.ID } className = "d-flex justify-content-between align-items-center">
+          votes.map (
+            ( student ) => (
+              <ListGroup.Item key = { student.ID } className = "shadow d-flex justify-content-between align-items-center" >
                 { student.Student_Name }
-                <Button variant = "danger" className = "ms-2" onClick = { () => voteDeletionHandler ( student.ID ) }> Delete Vote </Button>
+                <Button variant = "danger" className = "ms-2" onClick = { () => voteDeletionHandler ( student.ID ) } > Delete Vote </Button>
               </ListGroup.Item>
             )
           )
@@ -39,7 +56,7 @@ function MonitorCard ( props )
       </ListGroup>
 
     </Card>
-  )
+  );
 }
 
 export default MonitorCard;
