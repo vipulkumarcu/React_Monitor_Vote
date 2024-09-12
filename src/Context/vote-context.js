@@ -9,8 +9,10 @@ const VoteContext = React.createContext (
     studentList: [],
     addStudentVote: ( vote ) => {},
     removeStudentVote: ( voteID ) => {},
-    error: null,
-    setError: ( error ) => {}
+    message: null,
+    setMessage: ( error ) => {},
+    messageType : null,
+    setMessageType: ( type ) => {}
   }
 );
 

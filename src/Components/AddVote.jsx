@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState } from "react";
-import { Button, FloatingLabel, Form, Modal } from "react-bootstrap";
+import { Alert, Button, FloatingLabel, Form, Modal } from "react-bootstrap";
 import VoteContext from "../Context/vote-context";
 
 function AddVote ( { toggle } )
@@ -9,6 +9,7 @@ function AddVote ( { toggle } )
 
   const [ studentName, setStudentName ] = useState ( "" );
   const [ monitorName, setMonitorName ] = useState ( "" );
+  const [ error, setError ] = useState ("");
 
   function formSubmitHandler ( event )
   {
@@ -16,7 +17,7 @@ function AddVote ( { toggle } )
 
     if ( !studentName || !monitorName || monitorName === "Select Monitor" )
     {
-      context.setError ( "Please fill in all fields." );
+      setError ( "Please fill in all fields." );
       return;
     }
 
@@ -26,6 +27,7 @@ function AddVote ( { toggle } )
     };
 
     context.addStudentVote ( vote );
+
     setStudentName ( "" );
     setMonitorName ( "" );
 
@@ -40,6 +42,13 @@ function AddVote ( { toggle } )
       </Modal.Header>
 
       <Modal.Body>
+
+        {
+          error && 
+          <Alert variant = "danger" onClose = { () => setError ( null ) } dismissible >
+            { error }
+          </Alert>
+        }
 
         <Form className="m-0 p-3" style={{ textAlign: "center" }}>
 
@@ -63,8 +72,8 @@ function AddVote ( { toggle } )
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant = "outline-success" onClick = { formSubmitHandler }> Cast </Button>
-        <Button variant = "outline-secondary" onClick = { toggle }> Close </Button>
+        <Button variant = "success" onClick = { formSubmitHandler }> Cast </Button>
+        <Button variant = "secondary" onClick = { toggle }> Close </Button>
       </Modal.Footer>
 
     </Modal>

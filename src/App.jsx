@@ -9,26 +9,33 @@ import AddMonitor from './Components/AddMonitor';
 function App ()
 {
   const context = useContext ( VoteContext );
-  const [ isVisible, setIsVisible ] = useState ( false );
+
+  const [ addVote, setAddVote ] = useState ( false );
   const [ addMonitor, setAddMonitor ] = useState ( false );
 
-  function modalToggle ()
+  function addVoteModalToggler ()
   {
-    setIsVisible ( prev => !prev );
+    setAddVote ( prev => !prev );
   }
 
-  function monitorToggle ()
+  function addMonitorModalToggler ()
   {
     setAddMonitor ( prev => !prev );
+  }
+
+  function alertMessageHandler ()
+  {
+    context.setMessage ( null );
+    context.setMessageType ( null );
   }
 
   return (
     <Container className = "m-6 p-3">
 
       {
-        context.error && 
-        <Alert variant = "danger" onClose = { () => context.setError ( null ) } dismissible >
-          { context.error }
+        context.message && 
+        <Alert variant = { context.messageType } onClose = { alertMessageHandler } dismissible >
+          { context.message }
         </Alert>
       }
 
@@ -44,17 +51,17 @@ function App ()
         <Col md = { 3 } >
           {
             addMonitor ? 
-            ( <AddMonitor toggle = { monitorToggle } /> ) :
-            ( <Button variant = "outline-dark" className = "shadow" onClick = { monitorToggle } > Add Monitor </Button> )
+            ( <AddMonitor toggle = { addMonitorModalToggler } /> ) :
+            ( <Button variant = "outline-dark" className = "shadow" onClick = { addMonitorModalToggler } > Add Monitor </Button> )
           }
         </Col>
       </Row>
 
       <div className = "text-center mb-4" >
         {
-          isVisible ?
-          ( <AddVote toggle = { modalToggle } /> ) :
-          ( <Button variant = "outline-primary" className = "shadow" onClick = { modalToggle } > Add Vote </Button> )
+          addVote ?
+          ( <AddVote toggle = { addVoteModalToggler } /> ) :
+          ( <Button variant = "outline-primary" className = "shadow" onClick = { addVoteModalToggler } > Add Vote </Button> )
         }
       </div>
 

@@ -6,7 +6,8 @@ function VoteProvider ( props )
 {
   const [ monitorList, setMonitorList ] = useState ( [] );
   const [ studentList, setStudentList ] = useState ( [] );
-  const [ error, setError ] = useState ( null );
+  const [ message, setMessage ] = useState ( null );
+  const [ messageType, setMessageType ] = useState ( null );
 
   useEffect (
     () => {
@@ -28,8 +29,8 @@ function VoteProvider ( props )
         throw new Error ( "Failed to fetch data" );
       }
 
-      const monitorsData = await monitorsResponse.json();
-      const studentsData = await studentsResponse.json();
+      const monitorsData = await monitorsResponse.json ();
+      const studentsData = await studentsResponse.json ();
 
       const loadedMonitors = [];
       for ( const key in monitorsData )
@@ -49,7 +50,8 @@ function VoteProvider ( props )
     
     catch ( error )
     {
-      setError ( error.message );
+      setMessage ( error.message );
+      setMessageType ( "danger" )
     }
   }
 
@@ -73,13 +75,21 @@ function VoteProvider ( props )
         throw new Error ( "Failed to add vote" );
       }
 
-      const data = await response.json();
+      else
+      {
+        setMessage ( "Vote Casted Successfully" );
+        setMessageType ( "success" );
+      }
+
+      const data = await response.json ();
+
       setStudentList ( ( prevList ) => [ ...prevList, { ...vote, ID: data.name } ] );
     }
     
     catch ( error )
     {
-      setError ( error.message );
+      setMessage ( error.message );
+      setMessageType ( "danger" )
     }
   }
 
@@ -88,18 +98,30 @@ function VoteProvider ( props )
   {
     try
     {
-      await fetch ( `https://monitor-voting-default-rtdb.firebaseio.com/students-votes/${voteID}.json`,
+      const response = await fetch ( `https://monitor-voting-default-rtdb.firebaseio.com/students-votes/${voteID}.json`,
         {
           method: "DELETE"
         }
       );
+
+      if ( !response.ok )
+      {
+        throw new Error ( "Failed to Delete Vote" );
+      }
+
+      else
+      {
+        setMessage ( "Vote Deleted Successfully" );
+        setMessageType ( "success" );
+      }
 
       setStudentList ( ( prevList ) => prevList.filter ( ( vote ) => vote.ID !== voteID ) );
     }
     
     catch ( error )
     {
-      setError ( error.message );
+      setMessage ( error.message );
+      setMessageType ( "danger" )
     }
   }
 
@@ -123,13 +145,21 @@ function VoteProvider ( props )
         throw new Error ( "Failed to add monitor" );
       }
 
-      const data = await response.json();
+      else
+      {
+        setMessage ( "Candidate Added Successfully" );
+        setMessageType ( "success" );
+      }
+
+      const data = await response.json ();
+
       setMonitorList ( ( prevList ) => [ ...prevList, { ...monitor, ID: data.name } ] );
     }
     
     catch ( error )
     {
-      setError ( error.message );
+      setMessage ( error.message );
+      setMessageType ( "danger" )
     }
   }
 
@@ -138,18 +168,30 @@ function VoteProvider ( props )
   {
     try
     {
-      await fetch ( `https://monitor-voting-default-rtdb.firebaseio.com/monitor-list/${monitorID}.json`,
+      const response = await fetch ( `https://monitor-voting-default-rtdb.firebaseio.com/monitor-list/${monitorID}.json`,
         {
           method: "DELETE"
         }
       );
+
+      if ( !response.ok )
+      {
+        throw new Error ( "Failed to Remove Monitor" );
+      }
+
+      else
+      {
+        setMessage ( "Monitor Removed Successfully" );
+        setMessageType ( "success" );
+      }
 
       setMonitorList ( ( prevList ) => prevList.filter ( ( monitor ) => monitor.ID !== monitorID ) );
     }
     
     catch ( error )
     {
-      setError ( error.message );
+      setMessage ( error.message );
+      setMessageType ( "danger" )
     }
   }
 
@@ -160,8 +202,10 @@ function VoteProvider ( props )
     studentList,
     addStudentVote,
     removeStudentVote,
-    error,
-    setError
+    message,
+    setMessage,
+    messageType,
+    setMessageType
   };
 
   return (

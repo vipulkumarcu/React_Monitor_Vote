@@ -35,7 +35,7 @@ function MonitorCard ( { monitor } )
           </Col>
 
           <Col>
-            <Button variant = "outline-danger" onClick = { monitorDeletionHandler } className = "shadow" > Remove </Button>
+            <Button variant = "outline-danger" onClick = { monitorDeletionHandler } className = "shadow" > Remove Candidate </Button>
           </Col>
 
         </Row>
